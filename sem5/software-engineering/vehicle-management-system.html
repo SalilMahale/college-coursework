@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 25px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .tagline {
+            color: #666;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        .nav-tab:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .content-section {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-height: 500px;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #333;
+            font-weight: 700;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 700;
+            color: #333;
+            font-size: 14px;
+        }
+
+        td {
+            font-size: 14px;
+            color: #666;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tabs {
+                overflow-x: auto;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚗 Vehicle Management System</h1>
+            <p class="tagline">Manage your fleet efficiently with real-time tracking and alerts</p>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('dashboard')">Dashboard</button>
+            <button class="nav-tab" onclick="showSection('vehicles')">Vehicles</button>
+            <button class="nav-tab" onclick="showSection('service')">Service Records</button>
+            <button class="nav-tab" onclick="showSection('fuel')">Fuel Logs</button>
+            <button class="nav-tab" onclick="showSection('documents')">Documents</button>
+            <button class="nav-tab" onclick="showSection('reports')">Reports</button>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="content-section active">
+            <div class="section-header">
+                <h2 class="section-title">Dashboard Overview</h2>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalVehicles">0</div>
+                    <div class="stat-label">Total Vehicles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="activeVehicles">0</div>
+                    <div class="stat-label">Active Vehicles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="serviceDue">0</div>
+                    <div class="stat-label">Service Due</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="documentsExpiring">0</div>
+                    <div class="stat-label">Documents Expiring</div>
+                </div>
+            </div>
+
+            <div id="alertsContainer"></div>
+        </div>
+
+        <!-- Vehicles Section -->
+        <div id="vehicles" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Vehicle Fleet</h2>
+                <button class="btn btn-primary" onclick="openAddVehicleModal()">+ Add Vehicle</button>
+            </div>
+
+            <div class="filter-bar">
+                <input type="text" class="search-input" id="vehicleSearch" placeholder="Search by registration, brand, or model..." onkeyup="filterVehicles()">
+                <select id="statusFilter" onchange="filterVehicles()">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="maintenance">Maintenance</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+
+            <div class="table-container">
+                <table id="vehiclesTable">
+                    <thead>
+                        <tr>
+                            <th>Registration</th>
+                            <th>Brand</th>
+                            <th>Model</th>
+                            <th>Year</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vehiclesTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Service Records Section -->
+        <div id="service" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Service Records</h2>
+                <button class="btn btn-primary" onclick="openAddServiceModal()">+ Add Service Record</button>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Vehicle</th>
+                            <th>Service Date</th>
+                            <th>Type</th>
+                            <th>Cost</th>
+                            <th>Next Service</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="serviceTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Fuel Logs Section -->
+        <div id="fuel" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Fuel Logs</h2>
+                <button class="btn btn-primary" onclick="openAddFuelModal()">+ Add Fuel Entry</button>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Vehicle</th>
+                            <th>Date</th>
+                            <th>Odometer</th>
+                            <th>Liters</th>
+                            <th>Cost</th>
+                            <th>Efficiency (km/l)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fuelTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Documents Section -->
+        <div id="documents" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Legal Documents</h2>
+                <button class="btn btn-primary" onclick="openAddDocumentModal()">+ Add Document</button>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Vehicle</th>
+                            <th>Document Type</th>
+                            <th>Document Number</th>
+                            <th>Issue Date</th>
+                            <th>Expiry Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="documentsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Reports Section -->
+        <div id="reports" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Generate Reports</h2>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Report Type</label>
+                    <select id="reportType">
+                        <option value="vehicles">Vehicle Fleet Report</option>
+                        <option value="service">Service Records Report</option>
+                        <option value="fuel">Fuel Analysis Report</option>
+                        <option value="documents">Documents Status Report</option>
+                        <option value="complete">Complete System Report</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Export Format</label>
+                    <select id="exportFormat">
+                        <option value="csv">CSV (Excel Compatible)</option>
+                        <option value="json">JSON</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn btn-success" onclick="generateReport()">📊 Generate & Download Report</button>
+
+            <div style="margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                <h3 style="margin-bottom: 15px; color: #333;">Report Preview</h3>
+                <p style="color: #666;">Select a report type and click generate to download comprehensive data analysis.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Vehicle Modal -->
+    <div id="vehicleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="vehicleModalTitle">Add New Vehicle</h3>
+                <button class="close-modal" onclick="closeModal('vehicleModal')">&times;</button>
+            </div>
+            <form id="vehicleForm" onsubmit="saveVehicle(event)">
+                <input type="hidden" id="vehicleId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Registration Number *</label>
+                        <input type="text" id="registration" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Brand *</label>
+                        <input type="text" id="brand" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Model *</label>
+                        <input type="text" id="model" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Year *</label>
+                        <input type="number" id="year" min="1900" max="2099" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Vehicle Type *</label>
+                        <select id="vehicleType" required>
+                            <option value="">Select Type</option>
+                            <option value="Car">Car</option>
+                            <option value="Bike">Bike</option>
+                            <option value="Truck">Truck</option>
+                            <option value="Van">Van</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status *</label>
+                        <select id="status" required>
+                            <option value="active">Active</option>
+                            <option value="maintenance">Maintenance</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Current Odometer (km)</label>
+                        <input type="number" id="odometer" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Fuel Type</label>
+                        <select id="fuelType">
+                            <option value="Petrol">Petrol</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Electric">Electric</option>
+                            <option value="Hybrid">Hybrid</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('vehicleModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Vehicle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Service Modal -->
+    <div id="serviceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Service Record</h3>
+                <button class="close-modal" onclick="closeModal('serviceModal')">&times;</button>
+            </div>
+            <form id="serviceForm" onsubmit="saveService(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Vehicle *</label>
+                        <select id="serviceVehicle" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Service Date *</label>
+                        <input type="date" id="serviceDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Service Type *</label>
+                        <select id="serviceType" required>
+                            <option value="">Select Type</option>
+                            <option value="Regular Maintenance">Regular Maintenance</option>
+                            <option value="Oil Change">Oil Change</option>
+                            <option value="Tire Replacement">Tire Replacement</option>
+                            <option value="Brake Service">Brake Service</option>
+                            <option value="Engine Repair">Engine Repair</option>
+                            <option value="Transmission">Transmission</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Cost (₹) *</label>
+                        <input type="number" id="serviceCost" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Next Service Date</label>
+                        <input type="date" id="nextServiceDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Odometer Reading (km)</label>
+                        <input type="number" id="serviceOdometer" min="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="serviceNotes"></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('serviceModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Service Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Fuel Modal -->
+    <div id="fuelModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Fuel Entry</h3>
+                <button class="close-modal" onclick="closeModal('fuelModal')">&times;</button>
+            </div>
+            <form id="fuelForm" onsubmit="saveFuel(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Vehicle *</label>
+                        <select id="fuelVehicle" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Date *</label>
+                        <input type="date" id="fuelDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Odometer Reading (km) *</label>
+                        <input type="number" id="fuelOdometer" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Liters *</label>
+                        <input type="number" id="fuelLiters" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Cost (₹) *</label>
+                        <input type="number" id="fuelCost" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Fuel Type</label>
+                        <select id="fuelTypeLog">
+                            <option value="Petrol">Petrol</option>
+                            <option value="Diesel">Diesel</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="fuelNotes"></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('fuelModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Fuel Entry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Document Modal -->
+    <div id="documentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Document</h3>
+                <button class="close-modal" onclick="closeModal('documentModal')">&times;</button>
+            </div>
+            <form id="documentForm" onsubmit="saveDocument(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Vehicle *</label>
+                        <select id="docVehicle" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Document Type *</label>
+                        <select id="docType" required>
+                            <option value="">Select Type</option>
+                            <option value="Insurance">Insurance</option>
+                            <option value="Pollution Certificate">Pollution Certificate</option>
+                            <option value="Registration">Registration</option>
+                            <option value="Fitness Certificate">Fitness Certificate</option>
+                            <option value="Road Tax">Road Tax</option>
+                            <option value="Permit">Permit</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Document Number *</label>
+                        <input type="text" id="docNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Issue Date *</label>
+                        <input type="date" id="docIssueDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Expiry Date *</label>
+                        <input type="date" id="docExpiryDate" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="docNotes"></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('documentModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Document</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Data Storage Keys
+        const STORAGE_KEYS = {
+            vehicles: 'vms_vehicles',
+            service: 'vms_service',
+            fuel: 'vms_fuel',
+            documents: 'vms_documents'
+        };
+
+        // Initialize data structures
+        let vehicles = [];
+        let serviceRecords = [];
+        let fuelLogs = [];
+        let documents = [];
+
+        // Load data from localStorage
+        function loadData() {
+            vehicles = JSON.parse(localStorage.getItem(STORAGE_KEYS.vehicles) || '[]');
+            serviceRecords = JSON.parse(localStorage.getItem(STORAGE_KEYS.service) || '[]');
+            fuelLogs = JSON.parse(localStorage.getItem(STORAGE_KEYS.fuel) || '[]');
+            documents = JSON.parse(localStorage.getItem(STORAGE_KEYS.documents) || '[]');
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem(STORAGE_KEYS.vehicles, JSON.stringify(vehicles));
+            localStorage.setItem(STORAGE_KEYS.service, JSON.stringify(serviceRecords));
+            localStorage.setItem(STORAGE_KEYS.fuel, JSON.stringify(fuelLogs));
+            localStorage.setItem(STORAGE_KEYS.documents, JSON.stringify(documents));
+        }
+
+        // Section Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (sectionId === 'dashboard') updateDashboard();
+            if (sectionId === 'vehicles') renderVehicles();
+            if (sectionId === 'service') renderService();
+            if (sectionId === 'fuel') renderFuel();
+            if (sectionId === 'documents') renderDocuments();
+        }
+
+        // Modal Management
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Vehicle Functions
+        function openAddVehicleModal() {
+            document.getElementById('vehicleModalTitle').textContent = 'Add New Vehicle';
+            document.getElementById('vehicleForm').reset();
+            document.getElementById('vehicleId').value = '';
+            openModal('vehicleModal');
+        }
+
+        function editVehicle(id) {
+            const vehicle = vehicles.find(v => v.id === id);
+            if (!vehicle) return;
+
+            document.getElementById('vehicleModalTitle').textContent = 'Edit Vehicle';
+            document.getElementById('vehicleId').value = vehicle.id;
+            document.getElementById('registration').value = vehicle.registration;
+            document.getElementById('brand').value = vehicle.brand;
+            document.getElementById('model').value = vehicle.model;
+            document.getElementById('year').value = vehicle.year;
+            document.getElementById('vehicleType').value = vehicle.type;
+            document.getElementById('status').value = vehicle.status;
+            document.getElementById('odometer').value = vehicle.odometer || '';
+            document.getElementById('fuelType').value = vehicle.fuelType || 'Petrol';
+            openModal('vehicleModal');
+        }
+
+        function saveVehicle(event) {
+            event.preventDefault();
+            const id = document.getElementById('vehicleId').value;
+            const vehicleData = {
+                id: id || Date.now().toString(),
+                registration: document.getElementById('registration').value,
+                brand: document.getElementById('brand').value,
+                model: document.getElementById('model').value,
+                year: document.getElementById('year').value,
+                type: document.getElementById('vehicleType').value,
+                status: document.getElementById('status').value,
+                odometer: document.getElementById('odometer').value || 0,
+                fuelType: document.getElementById('fuelType').value,
+                createdAt: id ? vehicles.find(v => v.id === id).createdAt : new Date().toISOString()
+            };
+
+            if (id) {
+                const index = vehicles.findIndex(v => v.id === id);
+                vehicles[index] = vehicleData;
+            } else {
+                vehicles.push(vehicleData);
+            }
+
+            saveData();
+            renderVehicles();
+            closeModal('vehicleModal');
+            alert('Vehicle saved successfully!');
+        }
+
+        function deleteVehicle(id) {
+            if (!confirm('Are you sure you want to delete this vehicle? All related records will remain but will show as orphaned.')) return;
+            vehicles = vehicles.filter(v => v.id !== id);
+            saveData();
+            renderVehicles();
+            updateDashboard();
+        }
+
+        function renderVehicles() {
+            const tbody = document.getElementById('vehiclesTableBody');
+            tbody.innerHTML = '';
+
+            if (vehicles.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #999;">No vehicles added yet. Click "Add Vehicle" to get started.</td></tr>';
+                return;
+            }
+
+            vehicles.forEach(vehicle => {
+                const statusBadge = vehicle.status === 'active' ? 'badge-success' : 
+                                  vehicle.status === 'maintenance' ? 'badge-warning' : 'badge-danger';
+                
+                const row = `
+                    <tr>
+                        <td><strong>${vehicle.registration}</strong></td>
+                        <td>${vehicle.brand}</td>
+                        <td>${vehicle.model}</td>
+                        <td>${vehicle.year}</td>
+                        <td>${vehicle.type}</td>
+                        <td><span class="badge ${statusBadge}">${vehicle.status}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-secondary btn-small" onclick="editVehicle('${vehicle.id}')">Edit</button>
+                                <button class="btn btn-danger btn-small" onclick="deleteVehicle('${vehicle.id}')">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function filterVehicles() {
+            const searchTerm = document.getElementById('vehicleSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            const filtered = vehicles.filter(v => {
+                const matchesSearch = v.registration.toLowerCase().includes(searchTerm) ||
+                                    v.brand.toLowerCase().includes(searchTerm) ||
+                                    v.model.toLowerCase().includes(searchTerm);
+                const matchesStatus = !statusFilter || v.status === statusFilter;
+                return matchesSearch && matchesStatus;
+            });
+
+            const tbody = document.getElementById('vehiclesTableBody');
+            tbody.innerHTML = '';
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #999;">No vehicles match your search criteria.</td></tr>';
+                return;
+            }
+
+            filtered.forEach(vehicle => {
+                const statusBadge = vehicle.status === 'active' ? 'badge-success' : 
+                                  vehicle.status === 'maintenance' ? 'badge-warning' : 'badge-danger';
+                
+                const row = `
+                    <tr>
+                        <td><strong>${vehicle.registration}</strong></td>
+                        <td>${vehicle.brand}</td>
+                        <td>${vehicle.model}</td>
+                        <td>${vehicle.year}</td>
+                        <td>${vehicle.type}</td>
+                        <td><span class="badge ${statusBadge}">${vehicle.status}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-secondary btn-small" onclick="editVehicle('${vehicle.id}')">Edit</button>
+                                <button class="btn btn-danger btn-small" onclick="deleteVehicle('${vehicle.id}')">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Service Functions
+        function openAddServiceModal() {
+            document.getElementById('serviceForm').reset();
+            populateVehicleDropdown('serviceVehicle');
+            openModal('serviceModal');
+        }
+
+        function saveService(event) {
+            event.preventDefault();
+            const serviceData = {
+                id: Date.now().toString(),
+                vehicleId: document.getElementById('serviceVehicle').value,
+                date: document.getElementById('serviceDate').value,
+                type: document.getElementById('serviceType').value,
+                cost: parseFloat(document.getElementById('serviceCost').value),
+                nextServiceDate: document.getElementById('nextServiceDate').value,
+                odometer: document.getElementById('serviceOdometer').value || 0,
+                notes: document.getElementById('serviceNotes').value,
+                createdAt: new Date().toISOString()
+            };
+
+            serviceRecords.push(serviceData);
+            saveData();
+            renderService();
+            closeModal('serviceModal');
+            alert('Service record saved successfully!');
+        }
+
+        function deleteService(id) {
+            if (!confirm('Are you sure you want to delete this service record?')) return;
+            serviceRecords = serviceRecords.filter(s => s.id !== id);
+            saveData();
+            renderService();
+        }
+
+        function renderService() {
+            const tbody = document.getElementById('serviceTableBody');
+            tbody.innerHTML = '';
+
+            if (serviceRecords.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #999;">No service records yet. Click "Add Service Record" to track maintenance.</td></tr>';
+                return;
+            }
+
+            serviceRecords.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(service => {
+                const vehicle = vehicles.find(v => v.id === service.vehicleId);
+                const vehicleName = vehicle ? `${vehicle.brand} ${vehicle.model} (${vehicle.registration})` : 'Unknown Vehicle';
+                
+                const today = new Date();
+                const nextDate = service.nextServiceDate ? new Date(service.nextServiceDate) : null;
+                const daysDiff = nextDate ? Math.ceil((nextDate - today) / (1000 * 60 * 60 * 24)) : null;
+                
+                let statusBadge = 'badge-success';
+                let statusText = 'Completed';
+                if (nextDate) {
+                    if (daysDiff < 0) {
+                        statusBadge = 'badge-danger';
+                        statusText = 'Overdue';
+                    } else if (daysDiff <= 30) {
+                        statusBadge = 'badge-warning';
+                        statusText = 'Due Soon';
+                    }
+                }
+
+                const row = `
+                    <tr>
+                        <td>${vehicleName}</td>
+                        <td>${new Date(service.date).toLocaleDateString()}</td>
+                        <td>${service.type}</td>
+                        <td>₹${service.cost.toFixed(2)}</td>
+                        <td>${service.nextServiceDate ? new Date(service.nextServiceDate).toLocaleDateString() : 'N/A'}</td>
+                        <td><span class="badge ${statusBadge}">${statusText}</span></td>
+                        <td>
+                            <button class="btn btn-danger btn-small" onclick="deleteService('${service.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Fuel Functions
+        function openAddFuelModal() {
+            document.getElementById('fuelForm').reset();
+            populateVehicleDropdown('fuelVehicle');
+            openModal('fuelModal');
+        }
+
+        function saveFuel(event) {
+            event.preventDefault();
+            const fuelData = {
+                id: Date.now().toString(),
+                vehicleId: document.getElementById('fuelVehicle').value,
+                date: document.getElementById('fuelDate').value,
+                odometer: parseFloat(document.getElementById('fuelOdometer').value),
+                liters: parseFloat(document.getElementById('fuelLiters').value),
+                cost: parseFloat(document.getElementById('fuelCost').value),
+                fuelType: document.getElementById('fuelTypeLog').value,
+                notes: document.getElementById('fuelNotes').value,
+                createdAt: new Date().toISOString()
+            };
+
+            fuelLogs.push(fuelData);
+            saveData();
+            renderFuel();
+            closeModal('fuelModal');
+            alert('Fuel entry saved successfully!');
+        }
+
+        function deleteFuel(id) {
+            if (!confirm('Are you sure you want to delete this fuel entry?')) return;
+            fuelLogs = fuelLogs.filter(f => f.id !== id);
+            saveData();
+            renderFuel();
+        }
+
+        function calculateEfficiency(vehicleId, currentOdometer, currentLiters) {
+            const vehicleFuelLogs = fuelLogs
+                .filter(f => f.vehicleId === vehicleId)
+                .sort((a, b) => a.odometer - b.odometer);
+            
+            const currentIndex = vehicleFuelLogs.findIndex(f => f.odometer === currentOdometer);
+            if (currentIndex <= 0) return null;
+            
+            const previousLog = vehicleFuelLogs[currentIndex - 1];
+            const distance = currentOdometer - previousLog.odometer;
+            const efficiency = distance / currentLiters;
+            
+            return efficiency.toFixed(2);
+        }
+
+        function renderFuel() {
+            const tbody = document.getElementById('fuelTableBody');
+            tbody.innerHTML = '';
+
+            if (fuelLogs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #999;">No fuel logs yet. Click "Add Fuel Entry" to track consumption.</td></tr>';
+                return;
+            }
+
+            fuelLogs.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(fuel => {
+                const vehicle = vehicles.find(v => v.id === fuel.vehicleId);
+                const vehicleName = vehicle ? `${vehicle.brand} ${vehicle.model} (${vehicle.registration})` : 'Unknown Vehicle';
+                
+                const efficiency = calculateEfficiency(fuel.vehicleId, fuel.odometer, fuel.liters);
+                
+                const row = `
+                    <tr>
+                        <td>${vehicleName}</td>
+                        <td>${new Date(fuel.date).toLocaleDateString()}</td>
+                        <td>${fuel.odometer} km</td>
+                        <td>${fuel.liters} L</td>
+                        <td>₹${fuel.cost.toFixed(2)}</td>
+                        <td>${efficiency ? efficiency + ' km/l' : 'N/A'}</td>
+                        <td>
+                            <button class="btn btn-danger btn-small" onclick="deleteFuel('${fuel.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Document Functions
+        function openAddDocumentModal() {
+            document.getElementById('documentForm').reset();
+            populateVehicleDropdown('docVehicle');
+            openModal('documentModal');
+        }
+
+        function saveDocument(event) {
+            event.preventDefault();
+            const docData = {
+                id: Date.now().toString(),
+                vehicleId: document.getElementById('docVehicle').value,
+                type: document.getElementById('docType').value,
+                number: document.getElementById('docNumber').value,
+                issueDate: document.getElementById('docIssueDate').value,
+                expiryDate: document.getElementById('docExpiryDate').value,
+                notes: document.getElementById('docNotes').value,
+                createdAt: new Date().toISOString()
+            };
+
+            documents.push(docData);
+            saveData();
+            renderDocuments();
+            closeModal('documentModal');
+            alert('Document saved successfully!');
+        }
+
+        function deleteDocument(id) {
+            if (!confirm('Are you sure you want to delete this document?')) return;
+            documents = documents.filter(d => d.id !== id);
+            saveData();
+            renderDocuments();
+        }
+
+        function renderDocuments() {
+            const tbody = document.getElementById('documentsTableBody');
+            tbody.innerHTML = '';
+
+            if (documents.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #999;">No documents yet. Click "Add Document" to manage legal paperwork.</td></tr>';
+                return;
+            }
+
+            documents.sort((a, b) => new Date(a.expiryDate) - new Date(b.expiryDate)).forEach(doc => {
+                const vehicle = vehicles.find(v => v.id === doc.vehicleId);
+                const vehicleName = vehicle ? `${vehicle.brand} ${vehicle.model} (${vehicle.registration})` : 'Unknown Vehicle';
+                
+                const today = new Date();
+                const expiryDate = new Date(doc.expiryDate);
+                const daysDiff = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+                
+                let statusBadge = 'badge-success';
+                let statusText = 'Valid';
+                if (daysDiff < 0) {
+                    statusBadge = 'badge-danger';
+                    statusText = 'Expired';
+                } else if (daysDiff <= 30) {
+                    statusBadge = 'badge-warning';
+                    statusText = 'Expiring Soon';
+                }
+
+                const row = `
+                    <tr>
+                        <td>${vehicleName}</td>
+                        <td>${doc.type}</td>
+                        <td>${doc.number}</td>
+                        <td>${new Date(doc.issueDate).toLocaleDateString()}</td>
+                        <td>${new Date(doc.expiryDate).toLocaleDateString()}</td>
+                        <td><span class="badge ${statusBadge}">${statusText}</span></td>
+                        <td>
+                            <button class="btn btn-danger btn-small" onclick="deleteDocument('${doc.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Dashboard Functions
+        function updateDashboard() {
+            document.getElementById('totalVehicles').textContent = vehicles.length;
+            document.getElementById('activeVehicles').textContent = vehicles.filter(v => v.status === 'active').length;
+            
+            const today = new Date();
+            const serviceDue = serviceRecords.filter(s => {
+                if (!s.nextServiceDate) return false;
+                const nextDate = new Date(s.nextServiceDate);
+                const daysDiff = Math.ceil((nextDate - today) / (1000 * 60 * 60 * 24));
+                return daysDiff <= 30 && daysDiff >= 0;
+            }).length;
+            document.getElementById('serviceDue').textContent = serviceDue;
+            
+            const docsExpiring = documents.filter(d => {
+                const expiryDate = new Date(d.expiryDate);
+                const daysDiff = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+                return daysDiff <= 30 && daysDiff >= 0;
+            }).length;
+            document.getElementById('documentsExpiring').textContent = docsExpiring;
+            
+            generateAlerts();
+        }
+
+        function generateAlerts() {
+            const alertsContainer = document.getElementById('alertsContainer');
+            alertsContainer.innerHTML = '';
+            
+            const today = new Date();
+            const alerts = [];
+            
+            // Service alerts
+            serviceRecords.forEach(service => {
+                if (!service.nextServiceDate) return;
+                const nextDate = new Date(service.nextServiceDate);
+                const daysDiff = Math.ceil((nextDate - today) / (1000 * 60 * 60 * 24));
+                const vehicle = vehicles.find(v => v.id === service.vehicleId);
+                
+                if (daysDiff < 0) {
+                    alerts.push({
+                        type: 'danger',
+                        message: `⚠️ Service overdue for ${vehicle ? vehicle.registration : 'Unknown'} - ${service.type}`
+                    });
+                } else if (daysDiff <= 7) {
+                    alerts.push({
+                        type: 'warning',
+                        message: `🔧 Service due in ${daysDiff} days for ${vehicle ? vehicle.registration : 'Unknown'} - ${service.type}`
+                    });
+                }
+            });
+            
+            // Document alerts
+            documents.forEach(doc => {
+                const expiryDate = new Date(doc.expiryDate);
+                const daysDiff = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+                const vehicle = vehicles.find(v => v.id === doc.vehicleId);
+                
+                if (daysDiff < 0) {
+                    alerts.push({
+                        type: 'danger',
+                        message: `⚠️ ${doc.type} expired for ${vehicle ? vehicle.registration : 'Unknown'}`
+                    });
+                } else if (daysDiff <= 30) {
+                    alerts.push({
+                        type: 'warning',
+                        message: `📄 ${doc.type} expiring in ${daysDiff} days for ${vehicle ? vehicle.registration : 'Unknown'}`
+                    });
+                }
+            });
+            
+            if (alerts.length === 0) {
+                alertsContainer.innerHTML = '<div class="alert alert-success">✅ All systems operational. No pending alerts.</div>';
+            } else {
+                alerts.forEach(alert => {
+                    alertsContainer.innerHTML += `<div class="alert alert-${alert.type}">${alert.message}</div>`;
+                });
+            }
+        }
+
+        // Report Generation
+        function generateReport() {
+            const reportType = document.getElementById('reportType').value;
+            const format = document.getElementById('exportFormat').value;
+            
+            let data, filename;
+            
+            switch(reportType) {
+                case 'vehicles':
+                    data = vehicles;
+                    filename = 'vehicle_fleet_report';
+                    break;
+                case 'service':
+                    data = serviceRecords.map(s => {
+                        const vehicle = vehicles.find(v => v.id === s.vehicleId);
+                        return {
+                            ...s,
+                            vehicleInfo: vehicle ? `${vehicle.brand} ${vehicle.model} (${vehicle.registration})` : 'Unknown'
+                        };
+                    });
+                    filename = 'service_records_report';
+                    break;
+                case 'fuel':
+                    data = fuelLogs.map(f => {
+                        const vehicle = vehicles.find(v => v.id === f.vehicleId);
+                        const efficiency = calculateEfficiency(f.vehicleId, f.odometer, f.liters);
+                        return {
+                            ...f,
+                            vehicleInfo: vehicle ? `${vehicle.brand} ${vehicle.model} (${vehicle.registration})` : 'Unknown',
+                            efficiency: efficiency || 'N/A'
+                        };
+                    });
+                    filename = 'fuel_analysis_report';
+                    break;
+                case 'documents':
+                    data = documents.map(d => {
+                        const vehicle = vehicles.find(v => v.id === d.vehicleId);
+                        const today = new Date();
+                        const expiryDate = new Date(d.expiryDate);
+                        const daysDiff = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+                        let status = 'Valid';
+                        if (daysDiff < 0) status = 'Expired';
+                        else if (daysDiff <= 30) status = 'Expiring Soon';
+                        
+                        return {
+                            ...d,
+                            vehicleInfo: vehicle ? `${vehicle.brand} ${vehicle.model} (${vehicle.registration})` : 'Unknown',
+                            status: status,
+                            daysUntilExpiry: daysDiff
+                        };
+                    });
+                    filename = 'documents_status_report';
+                    break;
+                case 'complete':
+                    data = {
+                        generatedAt: new Date().toISOString(),
+                        summary: {
+                            totalVehicles: vehicles.length,
+                            activeVehicles: vehicles.filter(v => v.status === 'active').length,
+                            totalServiceRecords: serviceRecords.length,
+                            totalFuelLogs: fuelLogs.length,
+                            totalDocuments: documents.length
+                        },
+                        vehicles: vehicles,
+                        serviceRecords: serviceRecords,
+                        fuelLogs: fuelLogs,
+                        documents: documents
+                    };
+                    filename = 'complete_system_report';
+                    break;
+            }
+            
+            if (format === 'csv') {
+                downloadCSV(data, filename);
+            } else {
+                downloadJSON(data, filename);
+            }
+        }
+
+        function downloadCSV(data, filename) {
+            if (!Array.isArray(data)) {
+                alert('CSV export is only available for single-table reports. Use JSON for complete system report.');
+                return;
+            }
+            
+            if (data.length === 0) {
+                alert('No data available to export.');
+                return;
+            }
+            
+            const headers = Object.keys(data[0]);
+            let csv = headers.join(',') + '\n';
+            
+            data.forEach(row => {
+                const values = headers.map(header => {
+                    const val = row[header];
+                    return typeof val === 'string' ? `"${val.replace(/"/g, '""')}"` : val;
+                });
+                csv += values.join(',') + '\n';
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename + '_' + new Date().toISOString().split('T')[0] + '.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('Report downloaded successfully!');
+        }
+
+        function downloadJSON(data, filename) {
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename + '_' + new Date().toISOString().split('T')[0] + '.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('Report downloaded successfully!');
+        }
+
+        // Helper Functions
+        function populateVehicleDropdown(selectId) {
+            const select = document.getElementById(selectId);
+            select.innerHTML = '<option value="">Select Vehicle</option>';
+            
+            vehicles.forEach(v => {
+                const option = document.createElement('option');
+                option.value = v.id;
+                option.textContent = `${v.brand} ${v.model} (${v.registration})`;
+                select.appendChild(option);
+            });
+        }
+
+        // Initialize App
+        window.onload = function() {
+            loadData();
+            updateDashboard();
+            renderVehicles();
+        };
+    </script>
+</body>
+</html>

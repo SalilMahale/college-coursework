@@ -1,0 +1,2 @@
+Pattern matching is a core operation in information retrieval.
+A pattern is a set of syntactic features that a text segment must satisfy.

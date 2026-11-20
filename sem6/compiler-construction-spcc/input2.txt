@@ -1,0 +1,23 @@
+--- GRAMMAR PRODUCTIONS ---
+E -> E + E 
+E -> E * E
+E -> id
+
+
+--- PRECEDENCE RELATIONS ---
++ < *
++ > +
+* > +
+* > *
++ < id
+* < id
+id > +
+id > *
++ > $
+* > $
+$ < +
+$ < *
+$ < id
+id > $
+id - id
+$ Accept $

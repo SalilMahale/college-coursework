@@ -1,0 +1,2 @@
+Approximate search tolerates spelling errors such as retreival instead of retrieval.
+Patient users patch the path of every query pattern before indexing.

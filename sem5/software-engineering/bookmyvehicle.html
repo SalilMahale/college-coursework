@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BookMyVehicle</title>
+  <style>
+    /* --- Reset & base --- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: linear-gradient(135deg, #f6f8fb, #eef6ff);
+      color: #1f2937
+    }
+
+    /* --- Top nav / logo --- */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 36px;
+      background: transparent
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 28px;
+      letter-spacing: 0.6px;
+      background: linear-gradient(90deg, #1e40af, #06b6d4);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 6px 18px rgba(3, 7, 18, 0.06)
+    }
+
+    .logo span {
+      font-weight: 900
+    }
+
+    nav {
+      display: flex;
+      gap: 14px
+    }
+
+    .nav-btn {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .25s ease
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-3px);
+      color: #0b63b5
+    }
+
+    .nav-btn.active {
+      background: rgba(11, 99, 181, 0.12);
+      color: #0b63b5
+    }
+
+    /* --- Container --- */
+    .container {
+      max-width: 1100px;
+      margin: 28px auto;
+      padding: 26px;
+      background: linear-gradient(180deg, #fff, #fbfdff);
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(8, 15, 40, 0.06);
+      min-height: 60vh
+    }
+
+    /* --- Home --- */
+    .home-grid {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      justify-content: center;
+      padding: 40px
+    }
+
+    .card {
+      flex: 1;
+      min-width: 280px;
+      max-width: 420px;
+      padding: 28px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #ffffff, #f7fbff);
+      box-shadow: 0 6px 20px rgba(3, 7, 18, 0.04);
+      border: 1px solid rgba(12, 34, 80, 0.04)
+    }
+
+    .card h2 {
+      margin-bottom: 10px
+    }
+
+    .action-btn {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(90deg, #0b63b5, #06b6d4);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .18s ease;
+      box-shadow: 0 8px 24px rgba(11, 99, 181, 0.12)
+    }
+
+    .action-btn:active {
+      transform: translateY(2px)
+    }
+
+    /* --- Reports list --- */
+    .reports-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding: 12px
+    }
+
+    .report-item {
+      padding: 18px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #fbfdff, #ffffff);
+      border: 1px solid rgba(6, 10, 30, 0.03);
+      box-shadow: 0 6px 18px rgba(8, 15, 40, 0.03)
+    }
+
+    .report-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px
+    }
+
+    .small {
+      font-size: 13px;
+      color: #475569
+    }
+
+    /* --- About --- */
+    .about {
+      padding: 18px;
+      line-height: 1.6
+    }
+
+    /* --- Modal --- */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 10, 30, 0.35);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 560px;
+      border-radius: 14px;
+      background: white;
+      padding: 20px;
+      box-shadow: 0 24px 60px rgba(2, 6, 23, 0.36);
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all .28s cubic-bezier(.2, .9, .2, 1)
+    }
+
+    .modal.show {
+      transform: translateY(0);
+      opacity: 1
+    }
+
+    .modal h3 {
+      margin-bottom: 8px
+    }
+
+    .steps {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px
+    }
+
+    .step {
+      flex: 1;
+      padding: 8px;
+      border-radius: 10px;
+      background: #eef2ff;
+      color: #3730a3;
+      font-weight: 700;
+      text-align: center;
+      font-size: 13px
+    }
+
+    .field {
+      margin-bottom: 12px
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: #0f172a
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(15, 23, 42, 0.08)
+    }
+
+    .muted {
+      font-size: 13px;
+      color: #475569
+    }
+
+    .bottom-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 12px
+    }
+
+    .ghost {
+      background: transparent;
+      color: #0b63b5;
+      border: 1px solid rgba(11, 99, 181, 0.12);
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer
+    }
+
+    /* tiny responsive */
+    @media(max-width:720px) {
+      .home-grid {
+        flex-direction: column
+      }
+
+      .report-grid {
+        grid-template-columns: 1fr
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo"><span>Book</span>MyVehicle</div>
+    <nav>
+      <button class="nav-btn active" data-target="home">Home</button>
+      <button class="nav-btn" data-target="reports">Reports</button>
+      <button class="nav-btn" data-target="about">About Us</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- HOME -->
+    <section id="home" class="page">
+      <div class="home-grid">
+        <div class="card">
+          <h2>Reserve a vehicle</h2>
+          <p class="muted">Choose whether you want to book a car or bike. The booking flow will guide you step-by-step.
+          </p>
+          <div style="height:22px"></div>
+          <button class="action-btn" id="bookCar">Book a Car</button>
+          <div style="height:12px"></div>
+          <button class="action-btn" id="bookBike">Book a Bike</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPORTS -->
+    <section id="reports" class="page" style="display:none">
+      <h2 style="margin-bottom:12px">Reports</h2>
+      <div id="reportsList" class="reports-list">
+        <!-- filled dynamically -->
+      </div>
+      <div id="noReports" class="muted">No reports yet. After you make a booking and click <strong>Generate
+          report</strong>, it will appear here.</div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="page" style="display:none">
+      <h2>About BookMyVehicle</h2>
+      <div class="about">
+        <p>BookMyVehicle is a lightweight Vehicle Booking application crafted for travel loving people who want to rent
+          and book a Car or Bike for a road trip. Here, you can find a vast variety of excellent vehicle models, with
+          state of the art maintenance with highly competitive pricing options.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal (used for booking/payment flows) -->
+  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal" id="modal">
+      <!-- content replaced dynamically -->
+    </div>
+  </div>
+
+  <script>
+    /* ---------- App State ---------- */
+    const state = {
+      vehicleType: null, // 'Car' or 'Bike'
+      brand: '', model: '', vehicleNumber: '',
+      startDate: '', endDate: '',
+      available: false,
+      cost: 0,
+      paymentMethod: null, // 'Cash' or 'UPI'
+      paymentStatus: 'pending'
+    };
+
+    const LOCAL_KEY = 'bookmyvehicle_reports_v1';
+
+    /* ---------- Utilities ---------- */
+    function qs(sel) { return document.querySelector(sel) }
+    function qsa(sel) { return Array.from(document.querySelectorAll(sel)) }
+
+    function daysBetween(a, b) { const d1 = new Date(a); const d2 = new Date(b); const ms = d2 - d1; return Math.max(0, Math.ceil(ms / 86400000)); }
+
+    function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min }
+
+    function generateFakeVehicleDetails() {
+      // kilometers, mileage, age, return status
+      return {
+        kilometers: randInt(1200, 120000),
+        mileage: (randInt(25, 80) / 10).toFixed(1) + ' kmpl',
+        age: randInt(1, 15) + ' years',
+        returnStatus: Math.random() < 0.7 ? 'not returned' : 'returned'
+      }
+    }
+
+    /* ---------- Navigation (SPA style) ---------- */
+    qsa('.nav-btn').forEach(btn => btn.addEventListener('click', e => {
+      qsa('.nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const target = btn.dataset.target;
+      showPage(target);
+    }));
+
+    function showPage(name) {
+      qsa('.page').forEach(p => p.style.display = 'none');
+      qs('#' + name).style.display = 'block';
+    }
+
+    /* ---------- Modal Helpers ---------- */
+    const modalBackdrop = qs('#modalBackdrop');
+    const modalEl = qs('#modal');
+    function openModal(html) { modalEl.innerHTML = html; modalBackdrop.style.display = 'flex'; setTimeout(() => modalEl.classList.add('show'), 10); attachModalListeners(); }
+    function closeModal() { modalEl.classList.remove('show'); setTimeout(() => modalBackdrop.style.display = 'none', 280); }
+
+    modalBackdrop.addEventListener('click', (e) => { if (e.target === modalBackdrop) closeModal(); });
+
+    function attachModalListeners() {
+      const closeBtn = modalEl.querySelector('[data-close]'); if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    }
+
+    /* ---------- Booking flow (pop-up steps) ---------- */
+    document.getElementById('bookCar').addEventListener('click', () => startBooking('Car'));
+    document.getElementById('bookBike').addEventListener('click', () => startBooking('Bike'));
+
+    function startBooking(type) {
+      state.vehicleType = type; state.brand = ''; state.model = ''; state.vehicleNumber = ''; state.startDate = ''; state.endDate = ''; state.available = false; state.cost = 0; state.paymentMethod = null; state.paymentStatus = 'pending';
+      showStep1();
+    }
+
+    function showStep1() {
+      openModal(`<div>
+        <div style="display:flex;justify-content:space-between;align-items:center"><h3>Book a ${state.vehicleType}</h3><button data-close class="ghost">Close</button></div>
+        <div class="steps"><div class="step">Details</div><div class="step">Check</div><div class="step">Payment</div></div>
+        <div class="field"><label>Brand (enter full name)</label><input id="inpBrand" type="text" placeholder="e.g. Hyundai" /></div>
+        <div class="field"><label>Model (enter full name)</label><input id="inpModel" type="text" placeholder="e.g. Creta" /></div>
+        <div class="field"><label>Vehicle Number</label><input id="inpVehNo" type="text" placeholder="e.g. MH12AB1234" /></div>
+        <div class="field"><label>Rent start date</label><input id="inpStart" type="date" /></div>
+        <div class="field"><label>Rent end date</label><input id="inpEnd" type="date" /></div>
+        <div class="bottom-actions"><button class="ghost" data-close>Cancel</button><button id="toCheck" class="action-btn">Check availability</button></div>
+      </div>`);
+
+      setTimeout(() => {
+        const btn = modalEl.querySelector('#toCheck');
+        btn.addEventListener('click', () => {
+          const brand = modalEl.querySelector('#inpBrand').value.trim();
+          const model = modalEl.querySelector('#inpModel').value.trim();
+          const vehno = modalEl.querySelector('#inpVehNo').value.trim();
+          const start = modalEl.querySelector('#inpStart').value;
+          const end = modalEl.querySelector('#inpEnd').value;
+          if (!brand || !model || !vehno || !start || !end) { alert('Please fill all fields.'); return; }
+          if (new Date(end) < new Date(start)) { alert('End date must be after start date.'); return; }
+          state.brand = brand; state.model = model; state.vehicleNumber = vehno; state.startDate = start; state.endDate = end;
+          performAvailabilityCheck();
+        });
+      }, 50);
+    }
+
+    function performAvailabilityCheck() {
+      // 80% chance available
+      const available = Math.random() < 0.9;
+      state.available = available;
+      const numDays = Math.max(1, daysBetween(state.startDate, state.endDate));
+      // base rates for car/bike
+      const baseRate = state.vehicleType === 'Car' ? 1800 : 700; // per day
+      // slightly vary with random factor
+      const rate = Math.round(baseRate * (0.8 + Math.random() * 0.6));
+      state.cost = rate * numDays;
+
+      openModal(`<div>
+        <div style="display:flex;justify-content:space-between;align-items:center"><h3>Availability</h3><button data-close class="ghost">Close</button></div>
+        <div style="padding:10px 0">Checked for <strong>${numDays}</strong> day(s). </div>
+        <div style="margin:10px 0;padding:14px;border-radius:10px;background:${available ? 'linear-gradient(90deg,#ecfeff,#eff6ff)' : '#fff5f5'};border:1px solid ${available ? 'rgba(6,182,212,0.12)' : 'rgba(220,38,38,0.08)'}">
+          <strong>${available ? 'Available' : 'Not available'}</strong>
+          <div class="muted" style="margin-top:6px">${available ? 'Great news! this vehicle can be booked for selected dates.' : 'Sorry — this vehicle is not available for selected dates.'}</div>
+        </div>
+        ${available ? `<div style="margin-top:10px"><p class="muted">Estimated cost for selected days: <strong>₹${state.cost}</strong></p></div>` : ''}
+        <div class="bottom-actions">
+          <button class="ghost" data-close>Back</button>
+          ${available ? '<button id="proceedPayment" class="action-btn">Proceed to pay</button>' : ''}
+        </div>
+      </div>`);
+
+      setTimeout(() => {
+        const proceed = modalEl.querySelector('#proceedPayment'); if (proceed) proceed.addEventListener('click', () => showPayment());
+      }, 50);
+    }
+
+    function showPayment() {
+      openModal(`<div>
+        <div style="display:flex;justify-content:space-between;align-items:center"><h3>Payment</h3><button data-close class="ghost">Close</button></div>
+        <div class="steps"><div class="step">Details</div><div class="step">Check</div><div class="step">Payment</div></div>
+        <p class="small">Amount due: <strong>₹${state.cost}</strong></p>
+        <div class="field"><label>Choose payment method</label>
+          <select id="pmethod"><option value="Cash">Pay by Cash</option><option value="UPI">Pay by UPI</option></select>
+        </div>
+        <div id="paymentArea"></div>
+        <div class="bottom-actions"><button class="ghost" data-close>Cancel</button><button id="confirmPay" class="action-btn">Continue</button></div>
+      </div>`);
+
+      setTimeout(() => {
+        const psel = modalEl.querySelector('#pmethod'); const paymentArea = modalEl.querySelector('#paymentArea');
+        function renderPaymentArea() {
+          if (psel.value === 'Cash') {
+            paymentArea.innerHTML = `<div class="field"><div class="muted">Cash payment on pickup. Booking will be confirmed immediately.</div></div>`;
+          } else {
+            // show fake UPI number and a Paid button
+            const fakeUpi = 'upi:' + Math.floor(Math.random() * 90000000 + 10000000) + '@bank';
+            paymentArea.innerHTML = `<div class="field"><label>UPI number (mock)</label><input type="text" id="fakeUpi" readonly value="${fakeUpi}" /></div><div class="muted">Click "Confirm" then press the <strong>Paid</strong> button that appears to simulate payment.</div>`;
+          }
+        }
+        renderPaymentArea();
+        psel.addEventListener('change', renderPaymentArea);
+
+        const confirm = modalEl.querySelector('#confirmPay'); confirm.addEventListener('click', () => {
+          state.paymentMethod = modalEl.querySelector('#pmethod').value;
+          if (state.paymentMethod === 'Cash') {
+            state.paymentStatus = 'pending';
+            openModal(`<div><div style="display:flex;justify-content:space-between;align-items:center"><h3>Cash chosen</h3><button data-close class="ghost">Close</button></div>
+              <p>Your vehicle is marked as booked. Payment to be made in cash during pickup.</p>
+              <div style="margin-top:14px;display:flex;gap:8px;justify-content:flex-end"><button class="ghost" data-close>Okay</button><button id="genRpt" class="action-btn">Generate report</button></div>
+            </div>`);
+
+            setTimeout(() => {
+              modalEl.querySelector('#genRpt').addEventListener('click', () => { state.paymentStatus = 'pending'; generateReport(); closeModal(); });
+            }, 40);
+
+          } else {
+            // UPI path - show UPI and Paid button
+            const fakeUpi = modalEl.querySelector('#fakeUpi') ? modalEl.querySelector('#fakeUpi').value : 'upi:12345678@bank';
+            openModal(`<div><div style="display:flex;justify-content:space-between;align-items:center"><h3>Pay via UPI (mock)</h3><button data-close class="ghost">Close</button></div>
+              <p class="small">Send payment to the UPI ID below.</p>
+              <div style="padding:12px;background:#f8fafc;border-radius:10px;margin-top:10px;border:1px solid rgba(6,10,30,0.03)"><strong>${fakeUpi}</strong></div>
+              <div style="margin-top:14px;display:flex;gap:8px;justify-content:flex-end"><button class="ghost" data-close>Cancel</button><button id="paidBtn" class="action-btn">Paid</button></div>
+            </div>`);
+
+            setTimeout(() => {
+              const paidBtn = modalEl.querySelector('#paidBtn'); paidBtn.addEventListener('click', () => {
+                state.paymentStatus = 'paid';
+                openModal(`<div><div style="display:flex;justify-content:space-between;align-items:center"><h3>Payment successful</h3><button data-close class="ghost">Close</button></div>
+                  <p>Payment recorded (mock). Your booking is confirmed.</p>
+                  <div style="margin-top:14px;display:flex;gap:8px;justify-content:flex-end"><button class="ghost" data-close>Close</button><button id="genRpt2" class="action-btn">Generate report</button></div>
+                </div>`);
+                setTimeout(() => { modalEl.querySelector('#genRpt2').addEventListener('click', () => { generateReport(); closeModal(); }); }, 40);
+              });
+            }, 40);
+          }
+        });
+      }, 50);
+    }
+
+    /* ---------- Report generation & storage ---------- */
+    function generateReport() {
+      // build a report object
+      const vehicleExtra = generateFakeVehicleDetails();
+      const total = state.cost;
+      const paid = state.paymentStatus === 'paid' ? total : (state.paymentMethod === 'Cash' ? 0 : 0);
+      const pending = Math.max(0, total - paid);
+      const report = {
+        id: 'RPT-' + Date.now(),
+        timestamp: (new Date()).toLocaleString(),
+        vehicleType: state.vehicleType,
+        brand: state.brand,
+        model: state.model,
+        vehicleNumber: state.vehicleNumber,
+        rentStart: state.startDate,
+        rentEnd: state.endDate,
+        paymentMethod: state.paymentMethod || 'Cash',
+        paymentStatus: state.paymentStatus === 'paid' ? 'paid' : 'pending',
+        amountPaid: paid,
+        amountPending: pending,
+        vehicleStatus: {
+          kilometersCompleted: vehicleExtra.kilometers + ' km',
+          mileage: vehicleExtra.mileage,
+          age: vehicleExtra.age,
+          returnStatus: vehicleExtra.returnStatus
+        }
+      };
+
+      // store in localStorage array
+      const arr = JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]');
+      arr.unshift(report); // newest first
+      localStorage.setItem(LOCAL_KEY, JSON.stringify(arr));
+      renderReports();
+      // navigate to reports
+      qsa('.nav-btn').forEach(b => b.classList.remove('active')); qs('.nav-btn[data-target="reports"]').classList.add('active'); showPage('reports');
+      alert('Report generated and saved to Reports.');
+    }
+
+    function renderReports() {
+      const list = qs('#reportsList'); const no = qs('#noReports'); list.innerHTML = '';
+      const arr = JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]');
+      if (!arr || arr.length === 0) { no.style.display = 'block'; return; } else no.style.display = 'none';
+      arr.forEach(r => {
+        const item = document.createElement('div'); item.className = 'report-item';
+        item.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center"><div><strong>${r.vehicleType} — ${r.brand} ${r.model}</strong><div class="small">${r.timestamp} · ${r.id}</div></div><div class="small">₹${r.amountPaid} / ₹${r.amountPending}</div></div>
+          <div style="margin-top:10px" class="report-grid">
+            <div><div class="small">Vehicle number</div><strong>${r.vehicleNumber}</strong></div>
+            <div><div class="small">Rent period</div><strong>${r.rentStart} → ${r.rentEnd}</strong></div>
+            <div><div class="small">Payment</div><strong>${r.paymentMethod} · ${r.paymentStatus}</strong></div>
+            <div><div class="small">Amount</div><strong>Paid ₹${r.amountPaid} · Pending ₹${r.amountPending}</strong></div>
+          </div>
+          <div style="margin-top:10px;border-top:1px dashed rgba(6,10,30,0.05);padding-top:10px">
+            <div class="small">Vehicle status</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px">
+              <div><div class="small">Kilometers</div><strong>${r.vehicleStatus.kilometersCompleted}</strong></div>
+              <div><div class="small">Mileage</div><strong>${r.vehicleStatus.mileage}</strong></div>
+              <div><div class="small">Age</div><strong>${r.vehicleStatus.age}</strong></div>
+              <div><div class="small">Return status</div><strong>${r.vehicleStatus.returnStatus}</strong></div>
+            </div>
+          </div>
+          <div style="margin-top:10px;display:flex;justify-content:flex-end;gap:8px"><button class="ghost" data-id="${r.id}" data-action="download">Download</button><button class="ghost" data-id="${r.id}" data-action="delete">Delete</button></div>
+        `;
+        list.appendChild(item);
+      });
+
+      // attach download & delete
+      list.querySelectorAll('button[data-action="delete"]').forEach(b => b.addEventListener('click', (e) => {
+        const id = b.dataset.id; if (!confirm('Delete this report?')) return; const arr = JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]').filter(x => x.id !== id); localStorage.setItem(LOCAL_KEY, JSON.stringify(arr)); renderReports();
+      }));
+      list.querySelectorAll('button[data-action="download"]').forEach(b => b.addEventListener('click', (e) => {
+        const id = b.dataset.id; const arr = JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]'); const r = arr.find(x => x.id === id); if (!r) return; const content = JSON.stringify(r, null, 2); const blob = new Blob([content], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `${r.id}.json`; a.click(); URL.revokeObjectURL(url);
+      }));
+    }
+
+    // initialize
+    renderReports();
+    showPage('home');
+
+    // small helper: clear demo storage if url contains ?clear
+    if (location.search.includes('clear')) { localStorage.removeItem(LOCAL_KEY); renderReports(); }
+
+  </script>
+</body>
+
+</html>

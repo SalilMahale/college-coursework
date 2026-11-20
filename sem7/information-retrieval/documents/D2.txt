@@ -1,0 +1,2 @@
+Modern computers use computation to speed up computing tasks.
+Search filters and word counters help the user refine the result set.
